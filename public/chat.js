@@ -10,7 +10,6 @@ const typingIndicator = document.getElementById('typingIndicator');
 let myNickname = '';
 let typingTimeout;
 
-// Helper: Hash string to consistent color
 function stringToColor(str) {
   let hash = 0;
   for(let i = 0; i < str.length; i++) {
@@ -24,7 +23,6 @@ function stringToColor(str) {
   return color;
 }
 
-// Add a chat message to the chat window
 function addMessage(user, text, isSystem = false) {
   const div = document.createElement('div');
   div.classList.add('message');
@@ -53,7 +51,6 @@ function addMessage(user, text, isSystem = false) {
   chat.scrollTop = chat.scrollHeight;
 }
 
-// Receive welcome (nickname + user count)
 socket.on('welcome', (data) => {
   myNickname = data.nickname;
   nicknameElem.textContent = myNickname;
@@ -61,17 +58,14 @@ socket.on('welcome', (data) => {
   addMessage('System', `You joined as ${myNickname}`, true);
 });
 
-// Receive chat messages
 socket.on('message', (data) => {
   addMessage(data.user, data.text, data.user === 'System');
 });
 
-// Update user count
 socket.on('userCount', (count) => {
   userCountElem.textContent = `Users online: ${count}`;
 });
 
-// Typing indicator
 let typingUsers = new Set();
 
 socket.on('typing', ({ user, typing }) => {
@@ -93,7 +87,6 @@ function updateTypingIndicator() {
   }
 }
 
-// Send message function with empty check
 function sendMessage() {
   const msg = messageInput.value.trim();
   if (msg === '') return;
