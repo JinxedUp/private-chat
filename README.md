@@ -1,2 +1,8 @@
-# private-chat
-anonymous chat platform using nodejs, express.js and socket.io 
+# Anonymous Chat Platform
+
+A simple anonymous chatroom built with Node.js, Express, and Socket.IO.
+
+## Features
+- Realtime anonymous chat
+- User count display
+- Typing indicators
