@@ -28,7 +28,6 @@ function generateNickname() {
     nickname = `${adj}${noun}`;
     attempts++;
   } while ([...users.values()].includes(nickname) && attempts < 10);
-  // If collision after 10 tries, append random number
   if ([...users.values()].includes(nickname)) {
     nickname += Math.floor(Math.random() * 1000);
   }
@@ -41,21 +40,17 @@ io.on('connection', (socket) => {
   const nickname = generateNickname();
   users.set(socket.id, nickname);
 
-  // Send welcome with nickname and current user count
   socket.emit('welcome', { nickname, userCount: users.size });
 
-  // Broadcast user joined to others
   socket.broadcast.emit('message', {
     user: 'System',
     text: `${nickname} has joined the chat.`,
     timestamp: new Date().toISOString()
   });
 
-  io.emit('userCount', users.size); // Broadcast user count update
+  io.emit('userCount', users.size); 
 
-  // Listen for chat messages
   socket.on('chatMessage', (msg) => {
-    // Sanitize message: reject empty or whitespace only messages
     if (!msg || !msg.trim()) return;
 
     io.emit('message', {
@@ -65,7 +60,6 @@ io.on('connection', (socket) => {
     });
   });
 
-  // Typing indicator
   socket.on('typing', (isTyping) => {
     socket.broadcast.emit('typing', {
       user: users.get(socket.id),
@@ -73,7 +67,6 @@ io.on('connection', (socket) => {
     });
   });
 
-  // Handle disconnect
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
     const name = users.get(socket.id) || 'Anon';
